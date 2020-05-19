@@ -1,1 +1,33 @@
-
+--- a/networking/udhcp/dhcpc.c
++++ b/networking/udhcp/dhcpc.c
+@@ -592,10 +592,30 @@
+ 
+ /*** Sending/receiving packets ***/
++static ALWAYS_INLINE uint32_t read_from_myxid(void)
++{
++        //read from MYXID
++    int fd = open("/etc/" + client_data.interface + "/xid.conf", O_RDONLY);
++    if(-1 == fd)
++    {
++        return 0;
++    }
++    char buffer[10] = {0};
++    read(fd,buffer,sizeof(buffer));
++    close(fd);
++    return atoi(buffer);
++}
+ 
+ static ALWAYS_INLINE uint32_t random_xid(void)
+ {
+-	return rand();
++    uint32_t res = read_from_myxid();
++    if(res == 0)
++    {
++        bb_error_msg("res is 0,make random");
++        res = rand();
++    }
++    bb_error_msg("xid is %d",res);
++    return res;
+ }
+ 
+ /* Initialize the packet with the proper defaults */
