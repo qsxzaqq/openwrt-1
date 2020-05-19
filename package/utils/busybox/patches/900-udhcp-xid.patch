@@ -2,6 +2,7 @@
 +++ b/networking/udhcp/dhcpc.c
 @@ -592,10 +592,30 @@
  
+ 
  /*** Sending/receiving packets ***/
 +static ALWAYS_INLINE uint32_t read_from_myxid(void)
 +{
